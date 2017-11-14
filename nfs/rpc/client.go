@@ -47,6 +47,26 @@ type Client struct {
 }
 
 func DialTCP(network string, ldr *net.TCPAddr, addr string) (*Client, error) {
+	client, err := dialTCP(network, ldr, addr)
+	if err != nil {
+		return nil, err
+	}
+	client.SetTimeout(0 * time.Second)
+
+	return client, nil
+}
+
+func DialTCPWithTimeout(network string, ldr *net.TCPAddr, addr string, timeout time.Duration) (*Client, error) {
+	client, err := dialTCP(network, ldr, addr)
+	if err != nil {
+		return nil, err
+	}
+	client.SetTimeout(timeout)
+
+	return client, nil
+}
+
+func dialTCP(network string, ldr *net.TCPAddr, addr string) (*Client, error) {
 	a, err := net.ResolveTCPAddr(network, addr)
 	if err != nil {
 		return nil, err
